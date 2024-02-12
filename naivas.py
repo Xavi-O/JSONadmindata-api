@@ -177,7 +177,7 @@ def write_naivas_data():
 
             session.cookies = jar
 
-            response = session.get(nbo_url + menuItem)
+            response = session.get(nak_url + menuItem)
             soup = BeautifulSoup(response.text, 'html.parser')
             try:
                 try:
@@ -229,7 +229,7 @@ def write_naivas_data():
 
             session.cookies = jar
 
-            response = session.get(nbo_url + menuItem)
+            response = session.get(mbs_url + menuItem)
             soup = BeautifulSoup(response.text, 'html.parser')
             try:
                 try:
@@ -281,7 +281,7 @@ def write_naivas_data():
 
             session.cookies = jar
 
-            response = session.get(nbo_url + menuItem)
+            response = session.get(nrk_url + menuItem)
             soup = BeautifulSoup(response.text, 'html.parser')
             try:
                 try:
@@ -333,7 +333,7 @@ def write_naivas_data():
 
             session.cookies = jar
 
-            response = session.get(nbo_url + menuItem)
+            response = session.get(eld_url + menuItem)
             soup = BeautifulSoup(response.text, 'html.parser')
             try:
                 try:
@@ -385,7 +385,7 @@ def write_naivas_data():
 
             session.cookies = jar
 
-            response = session.get(nbo_url + menuItem)
+            response = session.get(ksm_url + menuItem)
             soup = BeautifulSoup(response.text, 'html.parser')
             try:
                 try:
@@ -437,7 +437,7 @@ def write_naivas_data():
 
             session.cookies = jar
 
-            response = session.get(nbo_url + menuItem)
+            response = session.get(thk_url + menuItem)
             soup = BeautifulSoup(response.text, 'html.parser')
             try:
                 try:
@@ -489,7 +489,7 @@ def write_naivas_data():
 
             session.cookies = jar
 
-            response = session.get(nbo_url + menuItem)
+            response = session.get(syo_url + menuItem)
             soup = BeautifulSoup(response.text, 'html.parser')
             try:
                 try:
@@ -541,7 +541,7 @@ def write_naivas_data():
 
             session.cookies = jar
 
-            response = session.get(nbo_url + menuItem)
+            response = session.get(dia_url + menuItem)
             soup = BeautifulSoup(response.text, 'html.parser')
             try:
                 try:
