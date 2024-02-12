@@ -111,7 +111,7 @@ def write_kfc_data():
             blob_products.append({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
             #print(blob_products)
-            data = (json.dumps({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
+            data = (json.dumps({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
             r = requests.post('https://api.tinybird.co/v0/events', 
                               params = {
                                   'name': 'kfc_data',
@@ -159,7 +159,7 @@ def write_kfc_data():
             blob_products.append({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
             #print(blob_products)
-            data = (json.dumps({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
+            data = (json.dumps({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
             r = requests.post('https://api.tinybird.co/v0/events', 
                               params = {
                                   'name': 'kfc_data',
@@ -207,7 +207,7 @@ def write_kfc_data():
             blob_products.append({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
             #print(blob_products)
-            data = (json.dumps({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
+            data = (json.dumps({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
             r = requests.post('https://api.tinybird.co/v0/events', 
                               params = {
                                   'name': 'kfc_data',
@@ -255,7 +255,7 @@ def write_kfc_data():
             blob_products.append({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
             #print(blob_products)
-            data = (json.dumps({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
+            data = (json.dumps({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
             r = requests.post('https://api.tinybird.co/v0/events', 
                               params = {
                                   'name': 'kfc_data',
@@ -303,7 +303,7 @@ def write_kfc_data():
             blob_products.append({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
             #print(blob_products)
-            data = (json.dumps({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
+            data = (json.dumps({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
             r = requests.post('https://api.tinybird.co/v0/events', 
                               params = {
                                   'name': 'kfc_data',
@@ -352,7 +352,7 @@ def write_kfc_data():
             blob_products.append({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
             #print(blob_products)
-            data = (json.dumps({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
+            data = (json.dumps({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
             r = requests.post('https://api.tinybird.co/v0/events', 
                               params = {
                                   'name': 'kfc_data',
