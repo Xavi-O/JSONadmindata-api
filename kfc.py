@@ -1,4 +1,4 @@
-import json, requests, pytz, os
+import json, requests, pytz
 from os import path
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -82,9 +82,6 @@ def run_cpu_tasks_in_parallel(tasks):
         running_task.start()
     for running_task in running_tasks:
         running_task.join()
-
-
-
 
 def nbo_task():
     nbo_store_locations = [hurlingham, junctionmall, langata, lavington, imaradaima, woodvalegroove, buruburu, waiyakiway,

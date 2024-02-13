@@ -1,10 +1,8 @@
-from flask import Flask
-import json, requests, pytz, os
+import json, requests, pytz
 from os import path
 from bs4 import BeautifulSoup
 from datetime import datetime
-
-app = Flask(__name__)
+from multiprocessing import Process
 
 currentdatetime = datetime.now(pytz.timezone('Africa/Nairobi'))
 
@@ -105,16 +103,30 @@ katani = '{"geo":{"lat":-1.3741457,"lng":36.9230499},"city":{"code":"SYO","name"
 """DIA Addresses"""
 gatemallukunda = '{"geo":{"lat":-4.2807655,"lng":39.5661889},"city":{"code":"DIA","name":"Diani","countryCode":"KE"},"placeId":"ChIJmdXe1eNFQBgR6MUn4DDCSsc","text":"Ukunda-Ramisi Road"}'
 
-
 filename = 'naivas-products.json'
+blob_products = []
+"""
+Writing Data to Naivas Blob
+            data = (json.dumps({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
+            r = requests.post('https://api.tinybird.co/v0/events', 
+                              params = {
+                                  'name': 'naivas_data',
+                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
+                                  }, 
+                                  data=data)
+"""
 
+def run_naivas_tasks_in_parallel(tasks):
+    running_tasks = [Process(target=task) for task in tasks]
+    for running_task in running_tasks:
+        running_task.start()
+    for running_task in running_tasks:
+        running_task.join()
 
-def write_naivas_data():
-    blob_products = []
+def nbo_task():
     nbo_store_locations = [capitalcenter, ciatamall, freedomheightsmall, thepointmall, donholm, prestigemall, themallwestlands, mountainmall,
                            kasarani, kilimanimall, hazinatradecenter, imaaramall, reyhanstation, greenspanmall, northparkmall,
-                           spurmall, lavingtoncurvemall, broadwalkmall]
-    
+                           spurmall, lavingtoncurvemall, broadwalkmall] 
     for nbo_store_location in nbo_store_locations:
         for menuItem in menuItems:
             session = requests.Session()
@@ -138,7 +150,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -157,17 +169,9 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
 
+def nak_task():
     nak_store_locations = [kenyattaavenue, supercenter]
-
     for nak_store_location in nak_store_locations:
         for menuItem in menuItems:
             session = requests.Session()
@@ -191,7 +195,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -210,15 +214,8 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
-            
+
+def mbs_task():
     mbs_store_locations = [nyalicenter, mwembetayari, likonimall, bamburi]
     for mbs_store_location in mbs_store_locations:
         for menuItem in menuItems:
@@ -243,7 +240,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -262,15 +259,8 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
 
+def nrk_task():
     nrk_store_locations = [ ngonghomeground, waterfront, ongatarongai]
     for nrk_store_location in nrk_store_locations:
         for menuItem in menuItems:
@@ -295,7 +285,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -314,15 +304,8 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
 
+def eld_task():
     eld_store_locations = [nandiroad, zionmall, elgonviewmall]
     for eld_store_location in eld_store_locations:
         for menuItem in menuItems:
@@ -347,7 +330,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -366,15 +349,8 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
 
+def ksm_task():
     ksm_store_locations = [ achiengoneko, megacitymall, kisumusimba]
     for ksm_store_location in ksm_store_locations:
         for menuItem in menuItems:
@@ -399,7 +375,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -418,15 +394,8 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
 
+def thk_task():
     thk_store_locations = [ ananasmall, workshoplane]
     for thk_store_location in thk_store_locations:
         for menuItem in menuItems:
@@ -451,7 +420,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -470,15 +439,8 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
 
+def syo_task():
     syo_store_locations = [ gatewaymall, kitengelamall, katani]
     for syo_store_location in syo_store_locations:
         for menuItem in menuItems:
@@ -503,7 +465,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -522,15 +484,8 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'SYO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'SYO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
-            
+
+def dia_task():
     dia_store_locations = [ gatemallukunda]
     for dia_store_location in dia_store_locations:
         for menuItem in menuItems:
@@ -555,7 +510,7 @@ def write_naivas_data():
                     price = '-'
                     status = 'unavailable'
                 try:
-                  promo = (soup.find('div', class_='tag-text__text').text.strip())
+                  promo = (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
                 except:
                   promo = 'none'
                 try:
@@ -574,23 +529,16 @@ def write_naivas_data():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'DIA', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-            #print(blob_products)
-            data = (json.dumps({ 'city': 'DIA', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status }))
-            r = requests.post('https://api.tinybird.co/v0/events', 
-                              params = {
-                                  'name': 'naivas_data',
-                                  'token': 'p.eyJ1IjogIjRmYTBlYzAyLTdhMzctNGEyNy1hODlkLTQxNTU1OGRmMDRlOCIsICJpZCI6ICJhYTg0NzkzZS01Y2Y3LTQ5N2MtOWM5MC02MjUyODQ3MDk4MjAiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.laJvu3vI-kaO2OiOrpSOeh5OvjpYI7JN0ufET4b62uY',
-                                  }, 
-                                  data=data)
 
-
-try:
-    SOME_SECRET = os.environ["SOME_SECRET"]
-except KeyError:
-    SOME_SECRET = "Token not available!"
-    #logger.info("Token not available!")
-    #raise
-
-if __name__ == "__main__":
-    app.make_response(f"Token value: {SOME_SECRET}")
-    app.run(write_naivas_data())
+if __name__ == '__main__':
+    run_naivas_tasks_in_parallel([
+        nbo_task,
+        nak_task,
+        mbs_task,
+        nrk_task,
+        eld_task,
+        ksm_task,
+        thk_task,
+        syo_task,
+        dia_task
+    ])
