@@ -163,10 +163,6 @@ def nbo_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -208,10 +204,6 @@ def nak_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -253,10 +245,6 @@ def mbs_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -298,10 +286,6 @@ def nrk_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -343,10 +327,6 @@ def eld_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -388,10 +368,6 @@ def ksm_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -433,10 +409,6 @@ def thk_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -478,10 +450,6 @@ def syo_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'SYO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -523,10 +491,6 @@ def dia_task():
                 price = "-"
                 address = (soup.find('div', class_='header-user-address__content__text').text.strip())
                 status = 'unavailable'
-            if path.isfile(filename) is False:
-                raise Exception("File not found")
-            with open(filename) as fp:
-                blob_products = json.load(fp)
             blob_products.append({ 'city': 'DIA', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
