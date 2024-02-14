@@ -1,4 +1,4 @@
-import json, requests, pytz
+import json, requests, pytz, os
 from os import path
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -372,6 +372,12 @@ def thk_task():
                 blob_products = json.load(fp)
             blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
+
+try:
+    SOME_SECRET = os.environ["SOME_SECRET"]
+except KeyError:
+    SOME_SECRET = "Token not available!"
+
 
 if __name__ == '__main__':
     run_cpu_tasks_in_parallel([
