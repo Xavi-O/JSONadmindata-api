@@ -522,5 +522,5 @@ if __name__ == '__main__':
         ksm_task,
         thk_task,
         syo_task,
-        dia_task
+        dia_task,
     ])
