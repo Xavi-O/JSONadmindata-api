@@ -2,7 +2,7 @@ name: run kfc.py
 
 on:
   schedule:
-    - cron: '00 09,13,15,18 * * *' 
+    - cron: '15 09,13,15,18 * * *' 
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
       - name: execute py script # run main.py
         env:
           SOME_SECRET: ${{ secrets.SOME_SECRET }}
-        run: python main.py
+        run: python kfc.py
           
       - name: commit files
         run: |
