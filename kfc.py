@@ -1,11 +1,11 @@
-import json, requests, pytz, os
+import json, requests, pytz
 from os import path
 from bs4 import BeautifulSoup
 from datetime import datetime
 from multiprocessing import Process
 
-currentdatetime = datetime.now(pytz.timezone('Africa/Nairobi'))
 
+currentdatetime = datetime.now(pytz.timezone('Africa/Nairobi'))
     
 #Glovo delivery addresses delivery cookies
 """NBO Addresses"""
@@ -76,7 +76,7 @@ Writing data to Tinybird
                                   data=data)
 """
 
-def run_cpu_tasks_in_parallel(tasks):
+def run_kfc_tasks(tasks):
     running_tasks = [Process(target=task) for task in tasks]
     for running_task in running_tasks:
         running_task.start()
@@ -373,19 +373,12 @@ def thk_task():
             blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
-try:
-    SOME_SECRET = os.environ["SOME_SECRET"]
-except KeyError:
-    SOME_SECRET = "Token not available!"
-
-
-if __name__ == '__main__':
-    run_cpu_tasks_in_parallel([
-        nbo_task,
-        nrk_task,
-        mbs_task,
-        nak_task,
-        eld_task,
-        ksm_task,
-        thk_task
+run_kfc_tasks([
+    nbo_task,
+    nrk_task,
+    mbs_task,
+    nak_task,
+    eld_task,
+    ksm_task,
+    thk_task
     ])
