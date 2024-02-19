@@ -72,7 +72,7 @@ supercenter = '{"geo":{"lat":-0.2830922,"lng":36.0892349},"city":{"code":"NAK","
 """MBS Addresses"""
 nyalicenter = '{"geo":{"lat":-4.022099,"lng":39.7195893},"city":{"code":"MBS","name":"Mombasa","countryCode":"KE"},"placeId":"ChIJR0cYmfYNQBgRVFhASzg4Sm0","text":"Links Road, XPH9+5R8, Nyali Centre, Mombasa, Kenya"}'
 mwembetayari = '{"geo":{"lat":-4.057011,"lng":39.6697158},"city":{"code":"MBS","name":"Mombasa","countryCode":"KE"},"placeId":"ChIJk7DGnRATQBgReRoebjAUYOE","text":"Mwembe Tayari Road"}'
-likonimall = '{"geo":{"lat":-1.3035686,"lng":36.85594529999999},"city":{"code":"NBO","name":"Nairobi","countryCode":"KE"},"placeId":"ChIJ82LXPv0RLxgRvTz6ZYq4_PM","text":"Likoni Road"}'
+likonimall = '{"geo":{"lat":-4.0745673,"lng":39.6659332},"city":{"code":"MBS","name":"Mombasa","countryCode":"KE"},"placeId":"ChIJP4aTP90TQBgR912XGCNGN5A","text":"Nyerere Avenue"}'
 bamburi = '{"geo":{"lat":-4.0024525,"lng":39.7012891},"city":{"code":"MBS","name":"Mombasa","countryCode":"KE"},"placeId":"ChIJ159vTo8NQBgRxblUfaPtDfU","text":"Bamburi, Mombasa, Kenya"}'
 
 """NRK Addresses"""
