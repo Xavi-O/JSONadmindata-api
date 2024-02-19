@@ -2,8 +2,6 @@ import json, requests, pytz
 from os import path
 from bs4 import BeautifulSoup
 from datetime import datetime
-from multiprocessing import Process
-
 
 currentdatetime = datetime.now(pytz.timezone('Africa/Nairobi'))
     
@@ -75,13 +73,6 @@ Writing data to Tinybird
                                   }, 
                                   data=data)
 """
-
-def run_kfc_tasks(tasks):
-    running_tasks = [Process(target=task) for task in tasks]
-    for running_task in running_tasks:
-        running_task.start()
-    for running_task in running_tasks:
-        running_task.join()
 
 def nbo_task():
     nbo_store_locations = [hurlingham, junctionmall, langata, lavington, imaradaima, woodvalegroove, buruburu, waiyakiway,
@@ -373,12 +364,10 @@ def thk_task():
             blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
-run_kfc_tasks([
-    nbo_task,
-    nrk_task,
-    mbs_task,
-    nak_task,
-    eld_task,
-    ksm_task,
-    thk_task
-    ])
+nbo_task(),
+nrk_task(),
+mbs_task(),
+nak_task(),
+eld_task(),
+ksm_task(),
+thk_task(),

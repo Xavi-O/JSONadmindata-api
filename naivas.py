@@ -2,7 +2,6 @@ import json, requests, pytz
 from os import path
 from bs4 import BeautifulSoup
 from datetime import datetime
-from multiprocessing import Process
 
 currentdatetime = datetime.now(pytz.timezone('Africa/Nairobi'))
 
@@ -115,13 +114,6 @@ Writing Data to Naivas Blob
                                   }, 
                                   data=data)
 """
-
-def run_naivas_tasks(tasks):
-    running_tasks = [Process(target=task) for task in tasks]
-    for running_task in running_tasks:
-        running_task.start()
-    for running_task in running_tasks:
-        running_task.join()
 
 def nbo_task():
     nbo_store_locations = [capitalcenter, ciatamall, freedomheightsmall, thepointmall, donholm, prestigemall, themallwestlands, mountainmall,
@@ -530,14 +522,12 @@ def dia_task():
             blob_products.append({ 'city': 'DIA', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
             with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
-run_naivas_tasks([
-    nbo_task,
-    nak_task,
-    mbs_task,
-    nrk_task,
-    eld_task,
-    ksm_task,
-    thk_task,
-    syo_task,
-    dia_task,
-])
+nbo_task(),
+nak_task(),
+mbs_task(),
+nrk_task(),
+eld_task(),
+ksm_task(),
+thk_task(),
+syo_task(),
+dia_task(),
