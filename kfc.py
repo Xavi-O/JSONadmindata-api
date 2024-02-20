@@ -104,8 +104,7 @@ def scrape_nbo_location(nbo_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            status = 'unavailable'
-        
+                    
         blob_products.append({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -140,8 +139,7 @@ def scrape_nrk_location(nrk_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            status = 'unavailable'
-        
+                    
         blob_products.append({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -176,8 +174,7 @@ def scrape_mbs_location(mbs_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            status = 'unavailable'
-        
+                    
         blob_products.append({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -212,8 +209,7 @@ def scrape_nak_location(nak_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            status = 'unavailable'
-        
+                    
         blob_products.append({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -248,8 +244,7 @@ def scrape_eld_location(eld_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            status = 'unavailable'
-        
+                    
         blob_products.append({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -284,8 +279,7 @@ def scrape_ksm_location(ksm_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            status = 'unavailable'
-        
+                    
         blob_products.append({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
@@ -320,8 +314,7 @@ def scrape_thk_location(thk_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            status = 'unavailable'
-        
+                    
         blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
