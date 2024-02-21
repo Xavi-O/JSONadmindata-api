@@ -3,6 +3,7 @@ import json, requests, pytz, threading
 from os import path
 from bs4 import BeautifulSoup
 from datetime import datetime
+from time import sleep
 
 currentdatetime = datetime.now(pytz.timezone('Africa/Nairobi'))
     
@@ -311,10 +312,12 @@ with open(filename) as fp:
         thread = threading.Thread(target=scrape_nbo_location, args=(nbo_store_location,))
         threads.append(thread)
         thread.start()
+        sleep(3)
     for nrk_store_location in nrk_store_locations:
         thread = threading.Thread(target=scrape_nrk_location, args=(nrk_store_location,))
         threads.append(thread)
         thread.start()
+        sleep(1)
     for mbs_store_location in mbs_store_locations:
         thread = threading.Thread(target=scrape_mbs_location, args=(mbs_store_location,))
         threads.append(thread)
