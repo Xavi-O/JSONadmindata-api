@@ -64,13 +64,19 @@ menuItems = ['Rice-Bliss', 'Streetwise-2', 'Streetwise-3', 'Streetwise-5', 'Stre
 blob_products = []
 filename = 'kfc-products.json'
 nbo_store_locations = [hurlingham, junctionmall, langata, lavington, imaradaima, woodvalegroove, buruburu, waiyakiway,
-                           limururoad, kasarani, kiamburoad, eastleigh, kimathistreet, southfieldmall, embakasi, villagemarket,
-                           westgate, northview, mamangina]
+                       limururoad, kasarani, kiamburoad, eastleigh, kimathistreet, southfieldmall, embakasi, villagemarket,
+                       westgate, northview, mamangina]
+
 nrk_store_locations = [thehubkaren, maiyanmall, galleriamall]
+
 mbs_store_locations = [mombasacbd, nyali]
+
 nak_store_locations = [westendmall, nakuruhyrax]
+
 eld_store_locations = [rupasmall]
+
 ksm_store_locations = [kisumumall]
+
 thk_store_locations = [thikatown]
 
 def scrape_nbo_location(nbo_store_location):
