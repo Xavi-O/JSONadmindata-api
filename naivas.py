@@ -78,7 +78,7 @@ bamburi = '{"geo":{"lat":-4.0024525,"lng":39.7012891},"city":{"code":"MBS","name
 
 """NRK Addresses"""
 ngonghomeground = '{"geo":{"lat":-1.3419946,"lng":36.6662846},"city":{"code":"NRK","name":"Ngong - Rongai - Karen","countryCode":"KE"},"placeId":"ChIJE3javSsdLxgRLpOGQI2y0-4","text":"Ngong Road, Ngong, Kenya"}'
-waterfront = '{"geo":{"lat":-1.3309058,"lng":36.714672},"city":{"code":"NRK","name":"Ngong - Rongai - Karen","countryCode":"KE"}'
+waterfront = '{"geo":{"lat":-1.3297271,"lng":36.7148028},"city":{"code":"NRK","name":"Ngong - Rongai - Karen","countryCode":"KE"},"placeId":"ChIJfX9mCVcbLxgR3mGNANwpsOQ","text":"Karen Road"}'
 ongatarongai = '{"geo":{"lat":-1.3938406,"lng":36.7441953},"city":{"code":"NRK","name":"Ngong - Rongai - Karen","countryCode":"KE"},"placeId":"ChIJ-VqjDLMFLxgRaL59EU0XUok","text":"Ongata Rongai, Kenya"}'
 
 """ELD Addresses"""
@@ -111,12 +111,12 @@ nbo_store_locations = [capitalcenter, ciatamall, freedomheightsmall, thepointmal
                            spurmall, lavingtoncurvemall, broadwalkmall]
 nak_store_locations = [kenyattaavenue, supercenter]
 mbs_store_locations = [nyalicenter, mwembetayari, likonimall, bamburi]
-nrk_store_locations = [ ngonghomeground, waterfront, ongatarongai]
+nrk_store_locations = [ngonghomeground, waterfront, ongatarongai]
 eld_store_locations = [nandiroad, zionmall, elgonviewmall]
-ksm_store_locations = [ achiengoneko, megacitymall, kisumusimba]
-thk_store_locations = [ ananasmall, workshoplane]
-syo_store_locations = [ gatewaymall, kitengelamall, katani]
-dia_store_locations = [ gatemallukunda]
+ksm_store_locations = [achiengoneko, megacitymall, kisumusimba]
+thk_store_locations = [ananasmall, workshoplane]
+syo_store_locations = [gatewaymall, kitengelamall, katani]
+dia_store_locations = [gatemallukunda]
 
 def scrape_nbo_location(nbo_store_location):
     for menuItem in menuItems:
@@ -133,10 +133,8 @@ def scrape_nbo_location(nbo_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -149,8 +147,7 @@ def scrape_nbo_location(nbo_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
 def scrape_nrk_location(nrk_store_location):
@@ -168,10 +165,8 @@ def scrape_nrk_location(nrk_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -184,8 +179,7 @@ def scrape_nrk_location(nrk_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
 def scrape_mbs_location(mbs_store_location):
@@ -203,10 +197,8 @@ def scrape_mbs_location(mbs_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -219,8 +211,7 @@ def scrape_mbs_location(mbs_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
 def scrape_nak_location(nak_store_location):
@@ -238,10 +229,8 @@ def scrape_nak_location(nak_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -254,8 +243,7 @@ def scrape_nak_location(nak_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
 def scrape_eld_location(eld_store_location):
@@ -273,10 +261,8 @@ def scrape_eld_location(eld_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -289,8 +275,7 @@ def scrape_eld_location(eld_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
 def scrape_ksm_location(ksm_store_location):
@@ -308,10 +293,8 @@ def scrape_ksm_location(ksm_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -324,8 +307,7 @@ def scrape_ksm_location(ksm_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
 def scrape_thk_location(thk_store_location):
@@ -343,10 +325,8 @@ def scrape_thk_location(thk_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -359,8 +339,7 @@ def scrape_thk_location(thk_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
 def scrape_syo_location(syo_store_location):
@@ -378,10 +357,8 @@ def scrape_syo_location(syo_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -394,8 +371,7 @@ def scrape_syo_location(syo_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'SYO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'SYO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 
 def scrape_dia_location(dia_store_location):
@@ -413,10 +389,8 @@ def scrape_dia_location(dia_store_location):
                 item = menuItem
             try:
                 price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-                status = 'available'
             except:
                 price = '-'
-                status = 'unavailable'
             try:
                 promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
             except:
@@ -429,8 +403,7 @@ def scrape_dia_location(dia_store_location):
             item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
             price = "-"
             address = soup.find('div', class_='header-user-address__content__text').text.strip()
-                    
-        blob_products.append({ 'city': 'DIA', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : status })
+        blob_products.append({ 'city': 'DIA', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available' })
         with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
 # Create and start threads for each location
 threads = []
