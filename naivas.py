@@ -166,13 +166,13 @@ if __name__ == "__main__":
                     for location in locations[city]:
                         results = pool.starmap(process_menu, [(city, url, location, menu) for menu in menus])
                         products.extend(results)
-                        
+
         with open(filename, 'w') as json_file: json.dump(products, json_file)
 
 schedule.every().day.at('09:00').do(naivas_job)
 schedule.every().day.at('13:00').do(naivas_job)
 schedule.every().day.at('15:00').do(naivas_job)
-schedule.every().day.at('18:10').do(naivas_job)
+schedule.every().day.at('18:30').do(naivas_job)
 
 while True:
     schedule.run_pending()
