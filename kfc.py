@@ -54,7 +54,7 @@ kisumumall = '{"geo":{"lat":-0.09801349999999999,"lng":34.7622829},"city":{"code
 thikatown = '{"geo":{"lat":-1.0417845,"lng":37.0718281},"city":{"code":"THK","name":"Thika","countryCode":"KE"},"placeId":"ChIJy89ejHdPLxgRPWemWupF83Y","text":"Kenyatta Highway"}'
 
 products = []
-filename = 'info.json'
+filename = 'kfc-products.json'
 menus = ['Rice-Bliss', 'Streetwise-2', 'Streetwise-3', 'Streetwise-5', 'Streetwise-7', 'KFC-Krusher', 'Double-Crunch-Burger']
 
 cities = {
