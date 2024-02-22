@@ -1,11 +1,12 @@
-from multiprocessing import Pool
-import json, requests, pytz, threading
+import multiprocessing
+import json, requests, pytz
 from os import path
 from bs4 import BeautifulSoup
 from datetime import datetime
-from time import sleep
+from multiprocessing import Process
 
 currentdatetime = datetime.now(pytz.timezone('Africa/Nairobi'))
+
     
 #Glovo delivery addresses delivery cookies
 """NBO Addresses"""
@@ -52,293 +53,72 @@ kisumumall = '{"geo":{"lat":-0.09801349999999999,"lng":34.7622829},"city":{"code
 """THK Addresses"""
 thikatown = '{"geo":{"lat":-1.0417845,"lng":37.0718281},"city":{"code":"THK","name":"Thika","countryCode":"KE"},"placeId":"ChIJy89ejHdPLxgRPWemWupF83Y","text":"Kenyatta Highway"}'
 
-#Declaration of global scopes
-nbo_url = 'https://glovoapp.com/ke/en/nairobi/kfc-nbo?search='
-nrk_url = 'https://glovoapp.com/ke/en/ngong-rongai-karen/kfc-nrk?search='
-mbs_url = 'https://glovoapp.com/ke/en/mombasa/kfc-mombasa?search='
-nak_url = 'https://glovoapp.com/ke/en/nakuru/kfc-nakuru-nak-ke?search='
-eld_url = 'https://glovoapp.com/ke/en/eldoret/kfc-eld?search='
-ksm_url = 'https://glovoapp.com/ke/en/kisumu/kfc-ksm?search='
-thk_url = 'https://glovoapp.com/ke/en/thika/kfc-thika-thk?search='
+products = []
+filename = 'info.json'
+menus = ['Rice-Bliss', 'Streetwise-2', 'Streetwise-3', 'Streetwise-5', 'Streetwise-7', 'KFC-Krusher', 'Double-Crunch-Burger']
 
-menuItems = ['Rice-Bliss', 'Streetwise-2', 'Streetwise-3', 'Streetwise-5', 'Streetwise-7', 'KFC-Krusher', 'Double-Crunch-Burger']
-blob_products = []
-filename = 'kfc-products.json'
-nbo_store_locations = [hurlingham, junctionmall, langata, lavington, imaradaima, woodvalegroove, buruburu, waiyakiway,
-                       limururoad, kasarani, kiamburoad, eastleigh, kimathistreet, southfieldmall, embakasi, villagemarket,
-                       westgate, northview, mamangina]
+cities = {
+    'NBO': ['https://glovoapp.com/ke/en/nairobi/kfc-nbo?search='],
+    'NRK': ['https://glovoapp.com/ke/en/ngong-rongai-karen/kfc-nrk?search='],
+    'MBS': ['https://glovoapp.com/ke/en/mombasa/kfc-mombasa?search='],
+    'NAK': ['https://glovoapp.com/ke/en/nakuru/kfc-nakuru-nak-ke?search='],
+    'ELD': ['https://glovoapp.com/ke/en/eldoret/kfc-eld?search='],
+    'KSM': ['https://glovoapp.com/ke/en/kisumu/kfc-ksm?search='],
+    'THK': ['https://glovoapp.com/ke/en/thika/kfc-thika-thk?search='],
+}
+locations = {
+    'NBO': [hurlingham, junctionmall, langata, lavington, imaradaima, woodvalegroove, buruburu, waiyakiway,
+            limururoad, kasarani, kiamburoad, eastleigh, kimathistreet, southfieldmall, embakasi, villagemarket,
+            westgate, northview, mamangina],
+    'NRK': [thehubkaren, maiyanmall, galleriamall],
+    'MBS': [mombasacbd, nyali],
+    'NAK': [westendmall, nakuruhyrax],
+    'ELD': [rupasmall],
+    'KSM': [kisumumall],
+    'THK': [thikatown],
+}
 
-nrk_store_locations = [thehubkaren, maiyanmall, galleriamall]
+def process_menu(city, url, location, menu):
+    # You can use the url here to perform the task specific to the city
+    session = requests.Session()
+    jar = requests.cookies.RequestsCookieJar()
+    jar.set('glovo_delivery_address', location)
+    session.cookies = jar
+    response = session.get(url + menu)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    try:
+        item = soup.find('div', class_='product-row__name').text.strip()
+    except:
+        item = menu
+    
+    price = "-" if (item == menu) else soup.find('span', class_='product-price__effective--new-card').text.strip()
+    location = (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
+    try:
+        promo = "none" if price == "-" else (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
+    except:
+        promo = "none"
+    return({
+            'city': city, 
+            'date': currentdatetime.strftime("%b %d, %Y"), 
+            'time': currentdatetime.strftime("%H:00"), 
+            'product': item, 
+            'price': price, 
+            'address': location, 
+            'status': "unavailable" if price == "-" else "available", 
+            'promo': promo
+            })
+    
 
-mbs_store_locations = [mombasacbd, nyali]
-
-nak_store_locations = [westendmall, nakuruhyrax]
-
-eld_store_locations = [rupasmall]
-
-ksm_store_locations = [kisumumall]
-
-thk_store_locations = [thikatown]
-
-def scrape_nbo_location(nbo_store_location):
-    for menuItem in menuItems:
-        session = requests.Session()
-        jar = requests.cookies.RequestsCookieJar()
-        jar.set('glovo_delivery_address', nbo_store_location)
-        session.cookies = jar
-        response = session.get(nbo_url + menuItem)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        try:
-            try:
-                item = soup.find('div', class_='product-row__name').text.strip()
-            except AttributeError:
-                item = menuItem
-            try:
-                price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-            except:
-                price = '-'
-            try:
-                promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
-            except:
-                promo = 'none'
-            try:
-                address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            except:
-                address = nbo_store_location[nbo_store_location.rfind(':'):].replace('"}', '').replace(':"', '')
-        except:
-            item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
-            price = "-"
-            address = soup.find('div', class_='header-user-address__content__text').text.strip()            
-        blob_products.append({ 'city': 'NBO', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available'  })
-        with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-
-def scrape_nrk_location(nrk_store_location):
-    for menuItem in menuItems:
-        session = requests.Session()
-        jar = requests.cookies.RequestsCookieJar()
-        jar.set('glovo_delivery_address', nrk_store_location)
-        session.cookies = jar
-        response = session.get(nrk_url + menuItem)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        try:
-            try:
-                item = soup.find('div', class_='product-row__name').text.strip()
-            except AttributeError:
-                item = menuItem
-            try:
-                price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-            except:
-                price = '-'
-            try:
-                promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
-            except:
-                promo = 'none'
-            try:
-                address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            except:
-                address = nrk_store_location[nrk_store_location.rfind(':'):].replace('"}', '').replace(':"', '')
-        except:
-            item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
-            price = "-"
-            address = soup.find('div', class_='header-user-address__content__text').text.strip()            
-        blob_products.append({ 'city': 'NRK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available'  })
-        with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-
-def scrape_mbs_location(mbs_store_location):
-    for menuItem in menuItems:
-        session = requests.Session()
-        jar = requests.cookies.RequestsCookieJar()
-        jar.set('glovo_delivery_address', mbs_store_location)
-        session.cookies = jar
-        response = session.get(mbs_url + menuItem)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        try:
-            try:
-                item = soup.find('div', class_='product-row__name').text.strip()
-            except AttributeError:
-                item = menuItem
-            try:
-                price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-            except:
-                price = '-'
-            try:
-                promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
-            except:
-                promo = 'none'
-            try:
-                address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            except:
-                address = mbs_store_location[mbs_store_location.rfind(':'):].replace('"}', '').replace(':"', '')
-        except:
-            item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
-            price = "-"
-            address = soup.find('div', class_='header-user-address__content__text').text.strip()            
-        blob_products.append({ 'city': 'MBS', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available'  })
-        with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-
-def scrape_nak_location(nak_store_location):
-    for menuItem in menuItems:
-        session = requests.Session()
-        jar = requests.cookies.RequestsCookieJar()
-        jar.set('glovo_delivery_address', nak_store_location)
-        session.cookies = jar
-        response = session.get(nak_url + menuItem)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        try:
-            try:
-                item = soup.find('div', class_='product-row__name').text.strip()
-            except AttributeError:
-                item = menuItem
-            try:
-                price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-            except:
-                price = '-'
-            try:
-                promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
-            except:
-                promo = 'none'
-            try:
-                address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            except:
-                address = nak_store_location[nak_store_location.rfind(':'):].replace('"}', '').replace(':"', '')
-        except:
-            item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
-            price = "-"
-            address = soup.find('div', class_='header-user-address__content__text').text.strip()            
-        blob_products.append({ 'city': 'NAK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available'  })
-        with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-
-def scrape_eld_location(eld_store_location):
-    for menuItem in menuItems:
-        session = requests.Session()
-        jar = requests.cookies.RequestsCookieJar()
-        jar.set('glovo_delivery_address', eld_store_location)
-        session.cookies = jar
-        response = session.get(eld_url + menuItem)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        try:
-            try:
-                item = soup.find('div', class_='product-row__name').text.strip()
-            except AttributeError:
-                item = menuItem
-            try:
-                price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-            except:
-                price = '-'
-            try:
-                promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
-            except:
-                promo = 'none'
-            try:
-                address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            except:
-                address = eld_store_location[eld_store_location.rfind(':'):].replace('"}', '').replace(':"', '')
-        except:
-            item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
-            price = "-"
-            address = soup.find('div', class_='header-user-address__content__text').text.strip()            
-        blob_products.append({ 'city': 'ELD', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available'  })
-        with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-
-def scrape_ksm_location(ksm_store_location):
-    for menuItem in menuItems:
-        session = requests.Session()
-        jar = requests.cookies.RequestsCookieJar()
-        jar.set('glovo_delivery_address', ksm_store_location)
-        session.cookies = jar
-        response = session.get(ksm_url + menuItem)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        try:
-            try:
-                item = soup.find('div', class_='product-row__name').text.strip()
-            except AttributeError:
-                item = menuItem
-            try:
-                price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-            except:
-                price = '-'
-            try:
-                promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
-            except:
-                promo = 'none'
-            try:
-                address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            except:
-                address = ksm_store_location[ksm_store_location.rfind(':'):].replace('"}', '').replace(':"', '')
-        except:
-            item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
-            price = "-"
-            address = soup.find('div', class_='header-user-address__content__text').text.strip()            
-        blob_products.append({ 'city': 'KSM', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available'  })
-        with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-
-def scrape_thk_location(thk_store_location):
-    for menuItem in menuItems:
-        session = requests.Session()
-        jar = requests.cookies.RequestsCookieJar()
-        jar.set('glovo_delivery_address', thk_store_location)
-        session.cookies = jar
-        response = session.get(thk_url + menuItem)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        try:
-            try:
-                item = soup.find('div', class_='product-row__name').text.strip()
-            except AttributeError:
-                item = menuItem
-            try:
-                price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-            except:
-                price = '-'
-            try:
-                promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
-            except:
-                promo = 'none'
-            try:
-                address = soup.find('div', class_='header-user-address__content__text').text.strip()
-            except:
-                address = thk_store_location[thk_store_location.rfind(':'):].replace('"}', '').replace(':"', '')
-        except:
-            item = soup.find('h2', class_='search-results__empty__title').text.strip().replace(',     "', ' ').replace('"', '')
-            price = "-"
-            address = soup.find('div', class_='header-user-address__content__text').text.strip()           
-        blob_products.append({ 'city': 'THK', 'date': currentdatetime.strftime("%b %d, %Y"), 'time': currentdatetime.strftime("%H:00"), 'item': item, 'price': price, 'promo': promo, 'address': address, 'status' : 'unavailable' if price == '-' else 'available'  })
-        with open(filename, 'w') as json_file: json.dump(blob_products, json_file)
-
-# Create and start threads for each location
-threads = []
-with open(filename) as fp:
-    blob_products = json.load(fp)
-    for nbo_store_location in nbo_store_locations:
-        thread = threading.Thread(target=scrape_nbo_location, args=(nbo_store_location,))
-        threads.append(thread)
-        thread.start()
-        sleep(3)
-    for nrk_store_location in nrk_store_locations:
-        thread = threading.Thread(target=scrape_nrk_location, args=(nrk_store_location,))
-        threads.append(thread)
-        thread.start()
-        sleep(1)
-    for mbs_store_location in mbs_store_locations:
-        thread = threading.Thread(target=scrape_mbs_location, args=(mbs_store_location,))
-        threads.append(thread)
-        thread.start()
-    for nak_store_location in nak_store_locations:
-        thread = threading.Thread(target=scrape_nak_location, args=(nak_store_location,))
-        threads.append(thread)
-        thread.start()
-    for eld_store_location in eld_store_locations:
-        thread = threading.Thread(target=scrape_eld_location, args=(eld_store_location,))
-        threads.append(thread)
-        thread.start()
-    for ksm_store_location in ksm_store_locations:
-        thread = threading.Thread(target=scrape_ksm_location, args=(ksm_store_location,))
-        threads.append(thread)
-        thread.start()
-    for thk_store_location in thk_store_locations:
-        thread = threading.Thread(target=scrape_thk_location, args=(thk_store_location,))
-        threads.append(thread)
-        thread.start()
-
-# Wait for all threads to finish
-for thread in threads:
-    thread.join()
+if __name__ == "__main__":
+    if path.isfile(filename) is False:
+        raise Exception("File not found")
+    with open(filename) as fp:
+        products = json.load(fp)
+    with multiprocessing.Pool() as pool:
+        for city, city_urls in cities.items():
+            for url in city_urls:
+                for location in locations[city]:
+                    results = pool.starmap(process_menu, [(city, url, location, menu) for menu in menus])
+                    products.extend(results)
+                    
+    with open(filename, 'w') as json_file: json.dump(products, json_file)
