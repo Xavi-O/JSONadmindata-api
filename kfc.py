@@ -110,25 +110,24 @@ def process_menu(city, url, location, menu):
     
 
 if __name__ == "__main__":
-    def kfc_job():
-        if path.isfile(filename) is False:
-            raise Exception("File not found")
-        with open(filename) as fp:
-            products = json.load(fp)
-        with multiprocessing.Pool() as pool:
-            for city, city_urls in cities.items():
-                for url in city_urls:
-                    for location in locations[city]:
-                        results = pool.starmap(process_menu, [(city, url, location, menu) for menu in menus])
-                        products.extend(results)
+#    def kfc_job():
+    if path.isfile(filename) is False:
+        raise Exception("File not found")
+    with open(filename) as fp:
+        products = json.load(fp)
+    with multiprocessing.Pool() as pool:
+        for city, city_urls in cities.items():
+            for url in city_urls:
+                for location in locations[city]:
+                    results = pool.starmap(process_menu, [(city, url, location, menu) for menu in menus])
+                    products.extend(results)
+    with open(filename, 'w') as json_file: json.dump(products, json_file)
 
-        with open(filename, 'w') as json_file: json.dump(products, json_file)
-
-schedule.every().day.at('09:05').do(kfc_job)
-schedule.every().day.at('13:05').do(kfc_job)
-schedule.every().day.at('15:20').do(kfc_job)
-schedule.every().day.at('18:05').do(kfc_job)
-
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+#schedule.every().day.at('09:05').do(kfc_job)
+#schedule.every().day.at('13:05').do(kfc_job)
+#schedule.every().day.at('15:20').do(kfc_job)
+#schedule.every().day.at('18:05').do(kfc_job)
+#
+#while True:
+#    schedule.run_pending()
+#    time.sleep(1)
