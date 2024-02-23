@@ -124,10 +124,10 @@ if __name__ == "__main__":
 
         with open(filename, 'w') as json_file: json.dump(products, json_file)
 
-schedule.every().day.at('09:00').do(kfc_job)
+schedule.every().day.at('09:47').do(kfc_job)
 schedule.every().day.at('13:00').do(kfc_job)
 schedule.every().day.at('15:00').do(kfc_job)
-schedule.every().day.at('18:10').do(kfc_job)
+schedule.every().day.at('18:00').do(kfc_job)
 
 while True:
     schedule.run_pending()
