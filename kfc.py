@@ -125,7 +125,7 @@ if __name__ == "__main__":
         with open(filename, 'w') as json_file: json.dump(products, json_file)
 
 #schedule.every().day.at('09:05').do(kfc_job)
-schedule.every().day.at('13:23').do(kfc_job)
+schedule.every().day.at('13:33').do(kfc_job)
 schedule.every().day.at('15:05').do(kfc_job)
 schedule.every().day.at('18:05').do(kfc_job)
 
