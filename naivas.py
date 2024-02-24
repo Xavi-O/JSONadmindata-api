@@ -132,18 +132,18 @@ def process_menu(city, url, location, menu):
     soup = BeautifulSoup(response.text, 'html.parser')
     try:
         item = soup.find('div', class_='product-row__name').text.strip()
+        price = soup.find('span', class_='product-price__effective--new-card').text.strip()
+        location = soup.find('div', class_='header-user-address__content__text').text.strip()
+        status = "available"
     except:
         item = menu
-    try:
-        price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-    except:
         price = "-"
+        location = (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
+        status = "unavailable"
     try:
         promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
     except:
-        promo = "none"
-    status = "unavailable" if price == "-" else "available",
-    location = (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
+        promo = "none" 
     return({
             'city': city, 
             'date': currentdatetime.strftime("%b %d, %Y"), 
