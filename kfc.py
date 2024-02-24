@@ -90,13 +90,16 @@ def process_menu(city, url, location, menu):
         item = soup.find('div', class_='product-row__name').text.strip()
     except:
         item = menu
-    
-    price = "-" if (item == menu) else soup.find('span', class_='product-price__effective--new-card').text.strip()
-    location = (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
     try:
-        promo = "none" if price == "-" else (soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip())
+        price = soup.find('span', class_='product-price__effective--new-card').text.strip()
+    except:
+        price = "-"
+    try:
+        promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
     except:
         promo = "none"
+    status = "unavailable" if price == "-" else "available",
+    location = (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
     return({
             'city': city, 
             'date': currentdatetime.strftime("%b %d, %Y"), 
@@ -104,7 +107,7 @@ def process_menu(city, url, location, menu):
             'product': item, 
             'price': price, 
             'address': location, 
-            'status': "unavailable" if price == "-" else "available", 
+            'status': status, 
             'promo': promo
             })
     
