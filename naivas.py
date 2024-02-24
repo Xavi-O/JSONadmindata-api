@@ -143,7 +143,7 @@ def process_menu(city, url, location, menu):
     try:
         promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
     except:
-        promo = "none" 
+        promo = "none"
     return({
             'city': city, 
             'date': currentdatetime.strftime("%b %d, %Y"), 
