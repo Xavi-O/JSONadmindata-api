@@ -130,33 +130,21 @@ def process_menu(city, url, location, menu):
     session.cookies = jar
     response = session.get(url + menu)
     soup = BeautifulSoup(response.text, 'html.parser')
-    try:
-        item = soup.find('div', class_='product-row__name').text.strip()
-        price = soup.find('span', class_='product-price__effective--new-card').text.strip()
-        location = soup.find('div', class_='header-user-address__content__text').text.strip()
-        status = "available"
-    except:
-        item = menu
-        price = "-"
-        location = (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
-        status = "unavailable"
-    try:
-        promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion').text.strip()
-    except:
-        promo = "none"
-    return({
-            'city': city, 
-            'date': currentdatetime.strftime("%b %d, %Y"), 
-            'time': currentdatetime.strftime("%H:00"), 
-            'product': item, 
-            'price': price, 
-            'address': location, 
-            'status': status, 
-            'promo': promo
-            })
-    #print(products)
+    product = str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) if str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) else menu
+    price = str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) if str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) else "-"
+    location = str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) if str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) else (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
+    promo  = str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) if str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) else 'none'
     
-
+    return({
+        'city': city, 
+        'date': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%b %d, %Y"), 
+        'time': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%H:00"),
+        'product': product,
+        'price': price,
+        'address': location,
+        'promo': promo,
+        'status': 'unavailable' if price == "-" else "available",
+        })
 if __name__ == "__main__":
 #    def naivas_job():
     if path.isfile(filename) is False:
