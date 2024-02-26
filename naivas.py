@@ -94,7 +94,7 @@ katani = '{"geo":{"lat":-1.3741457,"lng":36.9230499},"city":{"code":"SYO","name"
 gatemallukunda = '{"geo":{"lat":-4.2807655,"lng":39.5661889},"city":{"code":"DIA","name":"Diani","countryCode":"KE"},"placeId":"ChIJmdXe1eNFQBgR6MUn4DDCSsc","text":"Ukunda-Ramisi Road"}'
 
 products = []
-filename = 'naivas-products.json'
+filename = 'naivas-products.json' #'naivastest.json'
 
 cities = {
     'NBO': ['https://glovoapp.com/ke/en/nairobi/naivas-nbo?search='],
@@ -130,19 +130,19 @@ def process_menu(city, url, location, menu):
     session.cookies = jar
     response = session.get(url + menu)
     soup = BeautifulSoup(response.text, 'html.parser')
-    product = str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) if str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) else menu
+    #product = str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) if str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) else menu
     price = str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) if str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) else "-"
-    location = str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) if str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) else (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
-    promo  = str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) if str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) else 'none'
+    #location = str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) if str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) else (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
+    #promo  = str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) if str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) else 'none'
     
     return({
         'city': city, 
         'date': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%b %d, %Y"), 
         'time': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%H:00"),
-        'product': product,
+        'product': str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) if str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) else menu,
         'price': price,
-        'address': location,
-        'promo': promo,
+        'address': str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) if str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) else (location[location.rfind(':'):]).replace('"}', '').replace(':"', ''),
+        'promo': str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) if str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) else 'none',
         'status': 'unavailable' if price == "-" else "available",
         })
 if __name__ == "__main__":
