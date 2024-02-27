@@ -86,7 +86,7 @@ menus = [
 #"Streetwise-5-with-2-Rice",
 #"Streetwise-Colonel-Rice",
 #"Colonel-Bucket-Feast",
-#"Kentucky-Bucket",
+"Kentucky-Bucket",
 #"Bawa-Bucket",
 "Streetwise-7",
 #"Streetwise-7-with-2-Rice",
@@ -140,7 +140,7 @@ menus = [
 #"Coleslaw",
 #"Tortilla-Chips",
 #"Large-Chips",
-#"Family-Chips",
+"Family-Chips",
 #"Regular-Chips",
 #"Colonel-Rice",
 #"KFC-Regular-Gravy",
@@ -161,7 +161,7 @@ menus = [
 #"Coca-Cola-2L-PET",
 #"Dasani-Water-500ml",
 #"Minute-Maid-400ml-PET",
-#"Streetwise-3-+-Free-350-ml-soda",
+"Streetwise-3-+-Free-350-ml-soda",
 "KFC-Krusher",
 "Streerwise-7"
 ]
