@@ -96,7 +96,6 @@ menus = [
 "12-Pieces",
 "7-Pieces",
 "1-Piece-Chicken",
-"7-Pieces",
 "Wings-Lunch-Box",
 "Crunch-Burger-Lunch-Box",
 "Chicken-Lunchbox",
@@ -107,8 +106,6 @@ menus = [
 "Legend-Burger",
 "Hash-Brown-Burger",
 "Nyama-Nyama-Burger",
-"Double-Crunch-Burger",
-"Crunch-Burger",
 "Colonel-Burger",
 "Bazu-Burger-Meal",
 "Bazu-Burger",
@@ -154,8 +151,8 @@ menus = [
 "Vanilla-Choc-Chip-Ice-Cream-750ml",
 "Cookies-n-Cream-Ice-Cream-250ml",
 "Salted-Caramel-Ice-Cream-tub-250ml",
-"Ice-Lollies-Passion",
-"Ice-Lollies-Pina-Colada",
+"Ice-Lollies---Passion",
+"Ice-Lollies---Pina-Colada",
 "Vanilla-Choc-Chip-Ice-Cream-250ml",
 "Coca-Cola-1.25L-PET",
 "Coca-Cola-500ml-PET",
@@ -163,6 +160,9 @@ menus = [
 "Coca-Cola-2L-PET",
 "Dasani-Water-500ml",
 "Minute-Maid-400ml-PET",
+"Streetwise-3-+-Free-350-ml-soda",
+"KFC-Krusher",
+"Streerwise-7"
 ]
 
 cities = {
@@ -194,11 +194,7 @@ def process_menu(city, url, location, menu):
     session.cookies = jar
     response = session.get(url + menu)
     soup = BeautifulSoup(response.text, 'html.parser')
-    #product = str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) if str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) else menu
     price = str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) if str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) else "-"
-    #location = str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) if str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) else (location[location.rfind(':'):]).replace('"}', '').replace(':"', '')
-    #promo  = str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) if str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) else 'none'
-    
     return({
         'city': city, 
         'date': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%b %d, %Y"), 
@@ -207,7 +203,6 @@ def process_menu(city, url, location, menu):
         'price': price,
         'address': str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) if str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) else (location[location.rfind(':'):]).replace('"}', '').replace(':"', ''),
         'promo': str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) if str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) else 'none',
-        'status': 'unavailable' if price == "-" else "available",
         })
     
 
