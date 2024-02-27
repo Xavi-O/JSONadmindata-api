@@ -98,6 +98,11 @@ filename = 'naivas-products.json' #'naivastest.json'
 
 cities = {
     'NBO': ['https://glovoapp.com/ke/en/nairobi/naivas-nbo?search='],
+    ' NBO': ['https://glovoapp.com/ke/en/nairobi/naivas-nbo?search='],
+    'N BO': ['https://glovoapp.com/ke/en/nairobi/naivas-nbo?search='],
+    'NB O': ['https://glovoapp.com/ke/en/nairobi/naivas-nbo?search='],
+    'NBO ': ['https://glovoapp.com/ke/en/nairobi/naivas-nbo?search='],
+    ' NBO ': ['https://glovoapp.com/ke/en/nairobi/naivas-nbo?search='],
     'NAK': ['https://glovoapp.com/ke/en/nakuru/naivas-nak?search='],
     'MBS': ['https://glovoapp.com/ke/en/mombasa/naivas-mbs?search='],
     'NRK': ['https://glovoapp.com/ke/en/ngong-rongai-karen/naivas-nrk?search='],
@@ -109,9 +114,12 @@ cities = {
 }
 
 locations = {
-    'NBO': [capitalcenter, ciatamall, freedomheightsmall, thepointmall, donholm, prestigemall, themallwestlands, 
-            mountainmall, kasarani, kilimanimall, hazinatradecenter, imaaramall, reyhanstation, greenspanmall, 
-            northparkmall,spurmall, lavingtoncurvemall, broadwalkmall],
+    'NBO': [capitalcenter, ciatamall, freedomheightsmall],
+    ' NBO': [thepointmall, donholm, prestigemall],
+    'N BO': [themallwestlands, mountainmall, kasarani],
+    'NB O': [kilimanimall, hazinatradecenter, imaaramall],
+    'NBO ': [reyhanstation, greenspanmall, northparkmall],
+    ' NBO ': [spurmall, lavingtoncurvemall, broadwalkmall],
     'NAK': [kenyattaavenue, supercenter],
     'MBS': [nyalicenter, mwembetayari, likonimall, bamburi],
     'NRK': [ngonghomeground, waterfront, ongatarongai],
@@ -134,7 +142,7 @@ def process_menu(city, url, location, menu):
     price = str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) if str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) else "-"
   
     return({
-        'city': city, 
+        'city': city.replace(" ",""), 
         'date': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%b %d, %Y"), 
         'time': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%H:00"),
         'product': str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) if str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) else menu,
