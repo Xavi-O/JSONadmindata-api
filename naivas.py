@@ -138,18 +138,32 @@ def process_menu(city, url, location, menu):
     session.cookies = jar
     response = session.get(url + menu)
     soup = BeautifulSoup(response.text, 'html.parser')
-    #product = str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) if str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) else menu
-    price = str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) if str(getattr(soup.find('span', class_='product-price__effective--new-card'), 'text', '').strip()) else "-"
-  
-    return({
-        'city': city.replace(" ",""), 
-        'date': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%b %d, %Y"), 
-        'time': datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%H:00"),
-        'product': str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) if str(getattr(soup.find('div', class_='product-row__name'), 'text', '').strip()) else menu,
-        'price': price,
-        'address': str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) if str(getattr(soup.find('div', class_='header-user-address__content__text'), 'text', '').strip()) else (location[location.rfind(':'):]).replace('"}', '').replace(':"', ''),
-        'promo': str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) if str(getattr(soup.find('div', class_='promotions-wrapper product-row__info__promotion'), 'text', '').strip()) else 'none',
-        })
+
+    item = soup.find('div', class_='product-row__name')
+    if item is not None:
+        price = soup.find('span', class_='product-price__effective--new-card')
+        address = soup.find('div', class_='header-user-address__content__text')
+        promo = soup.find('div', class_='promotions-wrapper product-row__info__promotion')
+        return {
+            "city": city.replace(' ',''),
+            "date": datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%b %d, %Y"), 
+            "time": datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%H:00"),
+            "product": item.text.strip(),
+            "price": price.text.strip() if price else '-',
+            "address": address.text.strip() if address else (location[location.rfind(':'):]).replace('"}', '').replace(':"', ''),
+            "promo": promo.text.strip() if promo else 'none'
+            }
+    else:
+        return {
+            "city": city.replace(' ',''),
+            "date": datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%b %d, %Y"), 
+            "time": datetime.now(pytz.timezone('Africa/Nairobi')).strftime("%H:00"),
+            "product": menu.replace('-',' '),
+            "price": '-',
+            "address": (location[location.rfind(':'):]).replace('"}', '').replace(':"', ''),
+            "promo": 'none'
+            }
+
 if __name__ == "__main__":
 #    def naivas_job():
     if path.isfile(filename) is False:
